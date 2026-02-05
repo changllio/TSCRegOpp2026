@@ -37,6 +37,18 @@
     th{background:var(--section); text-align:left;}
     .small{font-size:12px; color:var(--muted);}
     .footer{margin-top:18px; color:var(--muted); font-size:12px;}
+  
+    .add-btn{
+      padding:10px 14px; background:var(--accent); color:#fff; border:none; border-radius:10px;
+      font-weight:700; cursor:pointer;
+    }
+    .add-btn:hover{filter:brightness(0.95);}
+    .row-btn{
+      width:34px; height:34px; border:none; border-radius:10px; background:#F1F3F4; cursor:pointer;
+      font-weight:900; color:#3c4043; line-height:1;
+    }
+    .row-btn:hover{background:#E8EAED;}
+
   </style>
 </head>
 <body>
@@ -135,7 +147,7 @@
       </div>
 
       <div class="section">Información de los equipos requeridos</div>
-      <div class="small">Complete al menos una fila. Si necesita más filas, puede duplicar la tabla.</div>
+      <div class="small">Complete al menos una fila. Use “+ Agregar equipo” para incluir más registros.</div>
       <table>
         <thead>
           <tr>
@@ -145,23 +157,33 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td><input name="eq_modelo_1" type="text" required></td>
-            <td><input name="eq_parte_1" type="text" required></td>
-            <td><input name="eq_cant_1" type="number" min="1" required></td>
-          </tr>
-          <tr>
-            <td><input name="eq_modelo_2" type="text"></td>
-            <td><input name="eq_parte_2" type="text"></td>
-            <td><input name="eq_cant_2" type="number" min="1"></td>
-          </tr>
-          <tr>
-            <td><input name="eq_modelo_3" type="text"></td>
-            <td><input name="eq_parte_3" type="text"></td>
-            <td><input name="eq_cant_3" type="number" min="1"></td>
-          </tr>
-        </tbody>
-      </table>
+<tbody id="equiposBody">
+  <tr class="eq-row">
+    <td><input name="eq_modelo_1" type="text" required></td>
+    <td><input name="eq_parte_1" type="text" required></td>
+    <td style="display:flex; gap:8px; align-items:center;">
+      <input name="eq_cant_1" type="number" min="1" required style="flex:1;">
+      <button type="button" class="row-btn" onclick="eliminarFila(this)" title="Eliminar fila" aria-label="Eliminar fila">−</button>
+    </td>
+  </tr>
+</tbody>
+</table>
+<div style="margin-top:10px; display:flex; gap:10px; align-items:center;">
+  <button type="button" class="add-btn" onclick="agregarEquipo()">+ Agregar equipo</button>
+  <div class="small" style="margin:0;">Agregue tantas filas como necesite.</div>
+</div>
+
+<template id="equipoRowTpl">
+  <tr class="eq-row">
+    <td><input type="text" required></td>
+    <td><input type="text" required></td>
+    <td style="display:flex; gap:8px; align-items:center;">
+      <input type="number" min="1" required style="flex:1;">
+      <button type="button" class="row-btn" onclick="eliminarFila(this)" title="Eliminar fila" aria-label="Eliminar fila">−</button>
+    </td>
+  </tr>
+</template>
+
 
       <div class="section">Información (Competidores)</div>
       <div class="hint">Incluya, si aplica: incoterms y si el precio es para Reseller o Usuario final.</div>
@@ -174,23 +196,33 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td><input name="comp_modelo_1" type="text"></td>
-            <td><input name="comp_precio_1" type="text" placeholder="Ej: USD 1,250"></td>
-            <td><input name="comp_incoterms_1" type="text" placeholder="Ej: CIF Bogotá / Reseller"></td>
-          </tr>
-          <tr>
-            <td><input name="comp_modelo_2" type="text"></td>
-            <td><input name="comp_precio_2" type="text"></td>
-            <td><input name="comp_incoterms_2" type="text"></td>
-          </tr>
-          <tr>
-            <td><input name="comp_modelo_3" type="text"></td>
-            <td><input name="comp_precio_3" type="text"></td>
-            <td><input name="comp_incoterms_3" type="text"></td>
-          </tr>
-        </tbody>
-      </table>
+<tbody id="competidoresBody">
+  <tr class="comp-row">
+    <td><input name="comp_modelo_1" type="text"></td>
+    <td><input name="comp_precio_1" type="text" placeholder="Ej: USD 1,250"></td>
+    <td style="display:flex; gap:8px; align-items:center;">
+      <input name="comp_incoterms_1" type="text" placeholder="Ej: CIF Bogotá / Reseller" style="flex:1;">
+      <button type="button" class="row-btn" onclick="eliminarFila(this)" title="Eliminar fila" aria-label="Eliminar fila">−</button>
+    </td>
+  </tr>
+</tbody>
+</table>
+<div style="margin-top:10px; display:flex; gap:10px; align-items:center;">
+  <button type="button" class="add-btn" onclick="agregarCompetidor()">+ Agregar competidor</button>
+  <div class="small" style="margin:0;">Agregue tantas filas como necesite.</div>
+</div>
+
+<template id="competidorRowTpl">
+  <tr class="comp-row">
+    <td><input type="text"></td>
+    <td><input type="text"></td>
+    <td style="display:flex; gap:8px; align-items:center;">
+      <input type="text" style="flex:1;">
+      <button type="button" class="row-btn" onclick="eliminarFila(this)" title="Eliminar fila" aria-label="Eliminar fila">−</button>
+    </td>
+  </tr>
+</template>
+
 
       <div class="footer">
         Campos marcados con * son obligatorios. Para procesar la solicitud, el formulario debe estar completo.
@@ -215,13 +247,64 @@ Guardar formulario
   </div>
 
 
+
 <script>
-function guardarFormulario() {
+function renumerarFilas() {
+  document.querySelectorAll("#equiposBody tr.eq-row").forEach((tr, idx) => {
+    const n = idx + 1;
+    const inputs = tr.querySelectorAll("input");
+    if (inputs[0]) inputs[0].name = `eq_modelo_${n}`;
+    if (inputs[1]) inputs[1].name = `eq_parte_${n}`;
+    if (inputs[2]) inputs[2].name = `eq_cant_${n}`;
+  });
+
+  document.querySelectorAll("#competidoresBody tr.comp-row").forEach((tr, idx) => {
+    const n = idx + 1;
+    const inputs = tr.querySelectorAll("input");
+    if (inputs[0]) inputs[0].name = `comp_modelo_${n}`;
+    if (inputs[1]) inputs[1].name = `comp_precio_${n}`;
+    if (inputs[2]) inputs[2].name = `comp_incoterms_${n}`;
+  });
+}
+
+function eliminarFila(btn) {
+  const tr = btn.closest("tr");
+  if (!tr) return;
+  const tbody = tr.parentElement;
+
+  if (tbody && tbody.id === "equiposBody") {
+    const filas = tbody.querySelectorAll("tr.eq-row");
+    if (filas.length <= 1) {
+      alert("Debe existir al menos 1 equipo requerido.");
+      return;
+    }
+  }
+
+  tr.remove();
+  renumerarFilas();
+}
+
+function agregarEquipo() {
+  const tpl = document.getElementById("equipoRowTpl");
+  const tbody = document.getElementById("equiposBody");
+  tbody.appendChild(tpl.content.cloneNode(true));
+  renumerarFilas();
+}
+
+function agregarCompetidor() {
+  const tpl = document.getElementById("competidorRowTpl");
+  const tbody = document.getElementById("competidoresBody");
+  tbody.appendChild(tpl.content.cloneNode(true));
+  renumerarFilas();
+}
+
+function recolectarDatos() {
   const datos = {};
 
   document.querySelectorAll("input, textarea, select").forEach(el => {
     const key = el.name || el.id;
     if (!key) return;
+    if (el.closest("template")) return;
 
     if (el.type === "radio") {
       if (el.checked) datos[key] = el.value;
@@ -233,15 +316,35 @@ function guardarFormulario() {
     }
   });
 
-  // 🔹 Pedir nombre del archivo
-  let nombre = prompt("Ingrese un nombre para guardar el formulario:", "Proyecto_TSC");
+  datos.equipos = Array.from(document.querySelectorAll("#equiposBody tr.eq-row")).map(tr => {
+    const inputs = tr.querySelectorAll("input");
+    return {
+      modelo: (inputs[0]?.value || "").trim(),
+      nro_parte: (inputs[1]?.value || "").trim(),
+      cantidad: inputs[2]?.value || ""
+    };
+  });
 
+  datos.competidores = Array.from(document.querySelectorAll("#competidoresBody tr.comp-row")).map(tr => {
+    const inputs = tr.querySelectorAll("input");
+    return {
+      modelo: (inputs[0]?.value || "").trim(),
+      precio_referencia: (inputs[1]?.value || "").trim(),
+      incoterms_precio: (inputs[2]?.value || "").trim()
+    };
+  });
+
+  return datos;
+}
+
+function guardarFormulario() {
+  const datos = recolectarDatos();
+
+  let nombre = prompt("Ingrese un nombre para guardar el formulario:", "TSC_RegOportunidad");
   if (!nombre) {
     alert("Guardado cancelado.");
     return;
   }
-
-  // Quitar caracteres inválidos
   nombre = nombre.replace(/[^a-z0-9_\-]/gi, "_");
 
   const contenido = JSON.stringify(datos, null, 2);
@@ -252,11 +355,7 @@ function guardarFormulario() {
   a.download = nombre + ".json";
   a.click();
 }
-</script>
 
-<input id="cargarJson" type="file" accept="application/json" style="display:none" />
-
-<script>
 document.getElementById("cargarJson").addEventListener("change", function () {
   const file = this.files[0];
   if (!file) return;
@@ -272,26 +371,119 @@ document.getElementById("cargarJson").addEventListener("change", function () {
     }
   };
   reader.readAsText(file);
+  this.value = "";
 });
 
-function rellenarFormulario(datos) {
-  document.querySelectorAll("input, textarea, select").forEach(el => {
-    const key = el.name || el.id;
-    if (!key) return;
-    if (!(key in datos)) return;
+function setValorCampo(selector, value) {
+  const el = document.querySelector(selector);
+  if (!el) return;
+  el.value = value ?? "";
+}
 
-    if (el.type === "radio") {
-      el.checked = el.value === datos[key];
-    } else if (el.type === "checkbox") {
-      const arr = Array.isArray(datos[key]) ? datos[key] : [];
-      el.checked = arr.includes(el.value);
+function seleccionarRadio(name, value) {
+  if (value == null) return;
+  document.querySelectorAll(`input[type="radio"][name="${name}"]`).forEach(r => {
+    r.checked = (r.value === value);
+  });
+}
+
+function limpiarFilas(tbodyId, rowClass, keepOne=false) {
+  const tbody = document.getElementById(tbodyId);
+  const rows = Array.from(tbody.querySelectorAll(`tr.${rowClass}`));
+  rows.forEach((r, idx) => {
+    if (keepOne && idx === 0) {
+      r.querySelectorAll("input").forEach(inp => inp.value = "");
     } else {
-      el.value = datos[key];
+      r.remove();
     }
   });
 }
-</script>
 
+function crearFilasDesdeArray(tbodyId, tplId, rowClass, arr, keepFirstAsBase=false) {
+  const tbody = document.getElementById(tbodyId);
+  const tpl = document.getElementById(tplId);
+
+  if (!Array.isArray(arr) || arr.length === 0) {
+    renumerarFilas();
+    return;
+  }
+
+  limpiarFilas(tbodyId, rowClass, keepFirstAsBase);
+
+  arr.forEach((item, idx) => {
+    let tr;
+    if (keepFirstAsBase && idx === 0) {
+      tr = tbody.querySelector(`tr.${rowClass}`);
+    } else {
+      tbody.appendChild(tpl.content.cloneNode(true));
+      tr = tbody.querySelectorAll(`tr.${rowClass}`)[tbody.querySelectorAll(`tr.${rowClass}`).length - 1];
+    }
+
+    const inputs = tr.querySelectorAll("input");
+    if (rowClass === "eq-row") {
+      if (inputs[0]) inputs[0].value = item.modelo ?? "";
+      if (inputs[1]) inputs[1].value = item.nro_parte ?? "";
+      if (inputs[2]) inputs[2].value = item.cantidad ?? "";
+    } else {
+      if (inputs[0]) inputs[0].value = item.modelo ?? "";
+      if (inputs[1]) inputs[1].value = item.precio_referencia ?? "";
+      if (inputs[2]) inputs[2].value = item.incoterms_precio ?? "";
+    }
+  });
+
+  renumerarFilas();
+}
+
+function rellenarFormulario(datos) {
+  seleccionarRadio("nivel", datos.nivel);
+
+  setValorCampo("#partner", datos.partner);
+  setValorCampo("#vendedor", datos.vendedor);
+  setValorCampo("#ciudad_partner", datos.ciudad_partner);
+  setValorCampo("#email_partner", datos.email_partner);
+  setValorCampo("#tel_partner", datos.tel_partner);
+
+  setValorCampo("#uf_nombre", datos.uf_nombre);
+  setValorCampo("#uf_contacto", datos.uf_contacto);
+  setValorCampo("#uf_cargo", datos.uf_cargo);
+  setValorCampo("#uf_email", datos.uf_email);
+  setValorCampo("#uf_tel", datos.uf_tel);
+
+  setValorCampo("#proj_nombre", datos.proj_nombre);
+  setValorCampo("#proj_desc", datos.proj_desc);
+  setValorCampo("#proj_cierre", datos.proj_cierre);
+  setValorCampo("#proj_compra", datos.proj_compra);
+  setValorCampo("#proj_req", datos.proj_req);
+
+  if (datos.equipos || datos.competidores) {
+    crearFilasDesdeArray("equiposBody", "equipoRowTpl", "eq-row", datos.equipos, true);
+    crearFilasDesdeArray("competidoresBody", "competidorRowTpl", "comp-row", datos.competidores, true);
+    return;
+  }
+
+  const equipos = [];
+  for (let i=1; i<=50; i++){
+    const m = datos[`eq_modelo_${i}`];
+    const p = datos[`eq_parte_${i}`];
+    const c = datos[`eq_cant_${i}`];
+    if (m==null && p==null && c==null) break;
+    if ((m||p||c)) equipos.push({modelo:m||"", nro_parte:p||"", cantidad:c||""});
+  }
+  const comps = [];
+  for (let i=1; i<=50; i++){
+    const m = datos[`comp_modelo_${i}`];
+    const pr = datos[`comp_precio_${i}`];
+    const inc = datos[`comp_incoterms_${i}`];
+    if (m==null && pr==null && inc==null) break;
+    if ((m||pr||inc)) comps.push({modelo:m||"", precio_referencia:pr||"", incoterms_precio:inc||""});
+  }
+
+  crearFilasDesdeArray("equiposBody", "equipoRowTpl", "eq-row", equipos, true);
+  crearFilasDesdeArray("competidoresBody", "competidorRowTpl", "comp-row", comps, true);
+}
+
+renumerarFilas();
+</script>
 
 </body>
 </html>
