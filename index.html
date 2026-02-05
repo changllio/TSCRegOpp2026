@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TSC AUTO ID - Formulario de Registro de Proyecto</title>
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --card:#ffffff;
+      --accent:#1a73e8;
+      --section:#e8f0fe;
+      --text:#202124;
+      --muted:#5f6368;
+      --danger:#b00020;
+      --border:#dadce0;
+      --radius:14px;
+    }
+    body{font-family: Arial, Helvetica, sans-serif; background:var(--bg); color:var(--text); margin:0; padding:28px;}
+    .container{max-width:980px; margin:0 auto; background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:22px 22px 28px;}
+    h1{margin:0; font-size:22px; color:var(--accent);}
+    .subtitle{margin:6px 0 14px; color:var(--muted);}
+    .alert{border:1px solid rgba(176,0,32,.35); background:rgba(176,0,32,.06); color:var(--danger);
+           padding:12px 12px; border-radius:12px; font-weight:700; margin:14px 0 18px;}
+    .section{background:var(--section); padding:10px 12px; border-radius:12px; font-weight:700; margin:18px 0 12px;}
+    .grid{display:grid; grid-template-columns: 1fr 1fr; gap:12px;}
+    label{display:block; font-weight:700; margin:0 0 6px;}
+    input, select, textarea{
+      width:100%; box-sizing:border-box; border:1px solid var(--border); border-radius:10px;
+      padding:10px 10px; font-size:14px; background:#fff;
+    }
+    textarea{min-height:90px; resize:vertical;}
+    .full{grid-column: 1 / -1;}
+    .hint{color:var(--muted); font-size:12px; margin-top:6px;}
+    table{width:100%; border-collapse:collapse; margin-top:8px;}
+    th, td{border:1px solid var(--border); padding:10px; vertical-align:top;}
+    th{background:var(--section); text-align:left;}
+    .small{font-size:12px; color:var(--muted);}
+    .footer{margin-top:18px; color:var(--muted); font-size:12px;}
+  </style>
+</head>
+<body>
+  <div class="container" style="position:relative;"><img src="TSC_logo_color.png" style="position:absolute; top:20px; right:30px; width:160px;">
+    <h1>TSC AUTO ID</h1>
+    <div class="subtitle">Formulario de Registro de Proyecto (Partner / Usuario Final)</div>
+
+    <div class="alert">
+      IMPORTANTE: Este formulario debe completarse en su totalidad. Si falta información, NO podrá procesarse la solicitud.
+    </div>
+
+    <form>
+      <div class="section">Información del Partner</div>
+      <div class="grid">
+        <div>
+          <label for="nivel">Nivel *</label>
+          <div class="grid full" style="grid-template-columns: repeat(4, 1fr); gap:10px;">
+  <label style="font-weight:600;"><input type="radio" name="nivel" value="Authorized" required> Authorized</label>
+  <label style="font-weight:600;"><input type="radio" name="nivel" value="Silver" required> Silver</label>
+  <label style="font-weight:600;"><input type="radio" name="nivel" value="Gold" required> Gold</label>
+  <label style="font-weight:600;"><input type="radio" name="nivel" value="Platinum" required> Platinum</label>
+</div>
+        </div>
+        <div>
+          <label for="partner">Nombre del Partner *</label>
+          <input id="partner" name="partner" type="text" required />
+        </div>
+        <div>
+          <label for="vendedor">Nombre del Vendedor *</label>
+          <input id="vendedor" name="vendedor" type="text" required />
+        </div>
+        <div>
+          <label for="ciudad_partner">Ciudad / País *</label>
+          <input id="ciudad_partner" name="ciudad_partner" type="text" required />
+        </div>
+        <div>
+          <label for="email_partner">Email *</label>
+          <input id="email_partner" name="email_partner" type="email" required />
+        </div>
+        <div>
+          <label for="tel_partner">Teléfono *</label>
+          <input id="tel_partner" name="tel_partner" type="text" required />
+        </div>
+      </div>
+
+      <div class="section">Información del Usuario Final</div>
+      <div class="grid">
+        <div>
+          <label for="uf_nombre">Nombre *</label>
+          <input id="uf_nombre" name="uf_nombre" type="text" required />
+        </div>
+        <div>
+          <label for="uf_contacto">Contacto *</label>
+          <input id="uf_contacto" name="uf_contacto" type="text" required />
+        </div>
+        <div>
+          <label for="uf_cargo">Cargo *</label>
+          <input id="uf_cargo" name="uf_cargo" type="text" required />
+        </div>
+        <div>
+          <label for="uf_email">Email *</label>
+          <input id="uf_email" name="uf_email" type="email" required />
+        </div>
+        <div>
+          <label for="uf_tel">Teléfono *</label>
+          <input id="uf_tel" name="uf_tel" type="text" required />
+        </div>
+      </div>
+
+      <div class="section">Información del Proyecto</div>
+      <div class="grid">
+        <div class="full">
+          <label for="proj_nombre">Nombre *</label>
+          <input id="proj_nombre" name="proj_nombre" type="text" required />
+        </div>
+        <div class="full">
+          <label for="proj_desc">Descripción *</label>
+          <textarea id="proj_desc" name="proj_desc" required></textarea>
+        </div>
+        <div>
+          <label for="proj_cierre">Fecha estimada de cierre *</label>
+          <input id="proj_cierre" name="proj_cierre" type="date" required />
+        </div>
+        <div>
+          <label for="proj_compra">Tipo de compra *</label>
+          <select id="proj_compra" name="proj_compra" required>
+            <option value="" selected disabled>Seleccione…</option>
+            <option>Una sola orden</option>
+            <option>Compras parciales</option>
+          </select>
+        </div>
+        <div class="full">
+          <label for="proj_req">Requerimientos especiales *</label>
+          <textarea id="proj_req" name="proj_req" required></textarea>
+        </div>
+      </div>
+
+      <div class="section">Información de los equipos requeridos</div>
+      <div class="small">Complete al menos una fila. Si necesita más filas, puede duplicar la tabla.</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Modelo *</th>
+            <th>Nro de Parte *</th>
+            <th>Cantidades *</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input name="eq_modelo_1" type="text" required></td>
+            <td><input name="eq_parte_1" type="text" required></td>
+            <td><input name="eq_cant_1" type="number" min="1" required></td>
+          </tr>
+          <tr>
+            <td><input name="eq_modelo_2" type="text"></td>
+            <td><input name="eq_parte_2" type="text"></td>
+            <td><input name="eq_cant_2" type="number" min="1"></td>
+          </tr>
+          <tr>
+            <td><input name="eq_modelo_3" type="text"></td>
+            <td><input name="eq_parte_3" type="text"></td>
+            <td><input name="eq_cant_3" type="number" min="1"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="section">Información (Competidores)</div>
+      <div class="hint">Incluya, si aplica: incoterms y si el precio es para Reseller o Usuario final.</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Modelo</th>
+            <th>Precio referencia</th>
+            <th>Incoterms / Precio (Reseller o Usuario final)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input name="comp_modelo_1" type="text"></td>
+            <td><input name="comp_precio_1" type="text" placeholder="Ej: USD 1,250"></td>
+            <td><input name="comp_incoterms_1" type="text" placeholder="Ej: CIF Bogotá / Reseller"></td>
+          </tr>
+          <tr>
+            <td><input name="comp_modelo_2" type="text"></td>
+            <td><input name="comp_precio_2" type="text"></td>
+            <td><input name="comp_incoterms_2" type="text"></td>
+          </tr>
+          <tr>
+            <td><input name="comp_modelo_3" type="text"></td>
+            <td><input name="comp_precio_3" type="text"></td>
+            <td><input name="comp_incoterms_3" type="text"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="footer">
+        Campos marcados con * son obligatorios. Para procesar la solicitud, el formulario debe estar completo.
+      </div>
+
+<button type="button" onclick="guardarFormulario()" 
+style="margin-top:20px;padding:12px 18px;background:#1a73e8;color:white;border:none;border-radius:8px;font-weight:bold;">
+Guardar formulario
+</button>
+
+
+<div style="margin-top:14px; display:flex; gap:10px; align-items:center;">
+  <input id="cargarJson" type="file" accept="application/json" style="display:none" />
+  <button type="button" onclick="document.getElementById('cargarJson').click()"
+    style="padding:12px 18px;background:#5f6368;color:white;border:none;border-radius:8px;font-weight:bold;">
+    Cargar formulario (JSON)
+  </button>
+
+</div>
+
+    </form>
+  </div>
+
+
+<script>
+function guardarFormulario() {
+  const datos = {};
+
+  document.querySelectorAll("input, textarea, select").forEach(el => {
+    const key = el.name || el.id;
+    if (!key) return;
+
+    if (el.type === "radio") {
+      if (el.checked) datos[key] = el.value;
+    } else if (el.type === "checkbox") {
+      if (!datos[key]) datos[key] = [];
+      if (el.checked) datos[key].push(el.value);
+    } else {
+      datos[key] = el.value;
+    }
+  });
+
+  // 🔹 Pedir nombre del archivo
+  let nombre = prompt("Ingrese un nombre para guardar el formulario:", "Proyecto_TSC");
+
+  if (!nombre) {
+    alert("Guardado cancelado.");
+    return;
+  }
+
+  // Quitar caracteres inválidos
+  nombre = nombre.replace(/[^a-z0-9_\-]/gi, "_");
+
+  const contenido = JSON.stringify(datos, null, 2);
+  const blob = new Blob([contenido], { type: "application/json" });
+
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = nombre + ".json";
+  a.click();
+}
+</script>
+
+<input id="cargarJson" type="file" accept="application/json" style="display:none" />
+
+<script>
+document.getElementById("cargarJson").addEventListener("change", function () {
+  const file = this.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const datos = JSON.parse(e.target.result);
+      rellenarFormulario(datos);
+      alert("Formulario cargado correctamente.");
+    } catch {
+      alert("El archivo no es un JSON válido.");
+    }
+  };
+  reader.readAsText(file);
+});
+
+function rellenarFormulario(datos) {
+  document.querySelectorAll("input, textarea, select").forEach(el => {
+    const key = el.name || el.id;
+    if (!key) return;
+    if (!(key in datos)) return;
+
+    if (el.type === "radio") {
+      el.checked = el.value === datos[key];
+    } else if (el.type === "checkbox") {
+      const arr = Array.isArray(datos[key]) ? datos[key] : [];
+      el.checked = arr.includes(el.value);
+    } else {
+      el.value = datos[key];
+    }
+  });
+}
+</script>
+
+
+</body>
+</html>
